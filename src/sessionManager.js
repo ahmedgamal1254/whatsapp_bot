@@ -3,8 +3,20 @@ const QRCode = require("qrcode");
 const fs = require("fs");
 const path = require("path");
 
-const SESSIONS_FILE = path.join(process.cwd(), "sessions.json");
-const AUTH_DIR_ROOT = path.join(process.cwd(), ".wwebjs_auth");
+// Determine the base directory for writing files
+let DATA_DIR = process.env.DATA_DIR;
+
+if (!DATA_DIR) {
+  // Check if running on AWS Lambda, Vercel, or similar serverless environments where root directory is read-only
+  if (process.env.LAMBDA_TASK_ROOT || process.cwd().startsWith("/var/task")) {
+    DATA_DIR = "/tmp";
+  } else {
+    DATA_DIR = process.cwd();
+  }
+}
+
+const SESSIONS_FILE = path.join(DATA_DIR, "sessions.json");
+const AUTH_DIR_ROOT = path.join(DATA_DIR, ".wwebjs_auth");
 
 class SessionManager {
   constructor() {
@@ -15,7 +27,7 @@ class SessionManager {
    * Initialize and load all saved sessions from sessions.json
    */
   async init() {
-    console.log("Initializing Session Manager...");
+    console.log(`Initializing Session Manager (Data Dir: ${DATA_DIR})...`);
     let savedSessions = [];
 
     // Load from sessions.json
@@ -63,7 +75,10 @@ class SessionManager {
     console.log(`Creating WhatsApp client for session: ${name} (${id})`);
 
     const client = new Client({
-      authStrategy: new LocalAuth({ clientId: id }),
+      authStrategy: new LocalAuth({ 
+        clientId: id,
+        dataPath: AUTH_DIR_ROOT
+      }),
       puppeteer: {
         headless: true,
         args: [
