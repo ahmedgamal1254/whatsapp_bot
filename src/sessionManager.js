@@ -72,22 +72,44 @@ class SessionManager {
       return this.sessions[id];
     }
 
-    console.log(`Creating WhatsApp client for session: ${name} (${id})`);
+    // Configure Puppeteer options
+    const puppeteerOpts = {
+      headless: true,
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage",
+        "--disable-gpu",
+      ],
+    };
+
+    // 1. Check for custom executable path in environment variables
+    if (process.env.PUPPETEER_EXECUTABLE_PATH) {
+      puppeteerOpts.executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
+    } else if (process.platform === "linux") {
+      // 2. Auto-detect common Chromium/Chrome paths on Linux systems
+      const commonLinuxPaths = [
+        "/usr/bin/chromium-browser",
+        "/usr/bin/chromium",
+        "/usr/bin/google-chrome-stable",
+        "/usr/bin/google-chrome",
+        "/usr/bin/chrome"
+      ];
+      for (const p of commonLinuxPaths) {
+        if (fs.existsSync(p)) {
+          console.log(`Auto-detected system Chrome/Chromium binary at: ${p}`);
+          puppeteerOpts.executablePath = p;
+          break;
+        }
+      }
+    }
 
     const client = new Client({
       authStrategy: new LocalAuth({ 
         clientId: id,
         dataPath: AUTH_DIR_ROOT
       }),
-      puppeteer: {
-        headless: true,
-        args: [
-          "--no-sandbox",
-          "--disable-setuid-sandbox",
-          "--disable-dev-shm-usage",
-          "--disable-gpu",
-        ],
-      },
+      puppeteer: puppeteerOpts,
     });
 
     const sessionObj = {
