@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Manage multiple WhatsApp Web sessions, scan QR codes, monitor status, and send messages through a web dashboard.">
+  <title>WhatsApp Bot Dashboard - Multi-Session Manager</title>
+  
+  <!-- Modern Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Custom Style Sheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-theme">
+  <!-- Dynamic Background Accents -->
+  <div class="bg-glow-1"></div>
+  <div class="bg-glow-2"></div>
+
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-logo">
+        <div class="logo-icon">
+          <i data-lucide="message-square"></i>
+        </div>
+        <div class="logo-text">
+          <h1>WhatsBot</h1>
+          <span>Multi-Session Console</span>
+        </div>
+      </div>
+      <div class="header-stats">
+        <div class="stat-badge">
+          <span class="stat-dot green" id="stat-active-dot"></span>
+          <span class="stat-label">Active:</span>
+          <span class="stat-val" id="stat-active-count">0</span>
+        </div>
+        <div class="stat-badge">
+          <span class="stat-dot grey" id="stat-total-dot"></span>
+          <span class="stat-label">Total:</span>
+          <span class="stat-val" id="stat-total-count">0</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Grid Dashboard -->
+    <main class="dashboard-grid">
+      
+      <!-- Left: Sessions Overview -->
+      <section class="sessions-section">
+        <div class="section-header">
+          <h2><i data-lucide="layers"></i> WhatsApp Sessions</h2>
+          <span class="section-subtitle">Manage connections & authenticate QR codes</span>
+        </div>
+
+        <!-- Sessions Container -->
+        <div class="sessions-grid" id="sessions-grid">
+          <!-- Loading State -->
+          <div class="loading-full">
+            <div class="spinner"></div>
+            <p>Loading WhatsApp sessions...</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right: Control Panel (Sidebar) -->
+      <aside class="control-panel">
+        
+        <!-- Create Session Card -->
+        <div class="panel-card">
+          <div class="card-header">
+            <h3><i data-lucide="plus-circle"></i> Create Session</h3>
+            <p>Launch a new instance to scan a QR code</p>
+          </div>
+          <form id="create-session-form" class="card-body">
+            <div class="form-group">
+              <label for="session-name">Session Name</label>
+              <input 
+                type="text" 
+                id="session-name" 
+                name="name" 
+                placeholder="e.g. Sales, Support, Bot 1" 
+                required 
+                autocomplete="off"
+              >
+            </div>
+            <button type="submit" class="btn btn-primary" id="btn-create-session">
+              <i data-lucide="power"></i> Start Session
+            </button>
+          </form>
+        </div>
+
+        <!-- Send Message Card -->
+        <div class="panel-card">
+          <div class="card-header">
+            <h3><i data-lucide="send"></i> Send Message</h3>
+            <p>Broadcast a message from an active session</p>
+          </div>
+          <form id="send-message-form" class="card-body">
+            <div class="form-group">
+              <label for="select-session">Select Sender Session</label>
+              <select id="select-session" name="sessionId" required>
+                <option value="" disabled selected>Select a session...</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="phone-number">Recipient Phone Number</label>
+              <input 
+                type="text" 
+                id="phone-number" 
+                name="phoneNumber" 
+                placeholder="e.g. 201234567890 (with country code)" 
+                required
+              >
+              <small class="form-hint">Must include country code, numbers only, no "+" or spaces.</small>
+            </div>
+            <div class="form-group">
+              <label for="message-content">Message Text</label>
+              <textarea 
+                id="message-content" 
+                name="message" 
+                rows="4" 
+                placeholder="Type your WhatsApp message here..." 
+                required
+              ></textarea>
+            </div>
+            <button type="submit" class="btn btn-accent" id="btn-send-message">
+              <i data-lucide="send"></i> Send WhatsApp
+            </button>
+          </form>
+        </div>
+
+      </aside>
+    </main>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Application Script -->
+  <script src="app.js"></script>
+</body>
+</html>
