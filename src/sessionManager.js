@@ -92,12 +92,10 @@ class SessionManager {
       // 2. Auto-detect common Chromium/Chrome paths on Linux systems
       const commonLinuxPaths = [
         // إضافة المسار الجديد المخصص للاستضافة أولاً لضمان تشغيله فوراً
+       "/home/u902755331/domains/whatsbot.ahmedgamal.org/.cache/puppeteer/chrome-headless-shell/linux-151.0.7879.0/chrome-headless-shell/chrome-headless-shell", // (تأكد من رقم الإصدار اللي هيطلعلك في الـ Terminal)
         "/home/u902755331/domains/whatsbot.ahmedgamal.org/.cache/puppeteer/chrome/linux-151.0.7879.0/chrome-linux64/chrome",
         "/usr/bin/chromium-browser",
-        "/usr/bin/chromium",
-        "/usr/bin/google-chrome-stable",
-        "/usr/bin/google-chrome",
-        "/usr/bin/chrome"
+        "/usr/bin/chromium"
       ];
       for (const p of commonLinuxPaths) {
         if (fs.existsSync(p)) {
