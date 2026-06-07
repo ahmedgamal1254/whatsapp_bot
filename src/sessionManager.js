@@ -72,7 +72,7 @@ class SessionManager {
       return this.sessions[id];
     }
 
-    // Configure Puppeteer options
+    // Configure Puppeteer options (Optimized for shared hosting environment)
     const puppeteerOpts = {
       headless: true,
       args: [
@@ -80,6 +80,8 @@ class SessionManager {
         "--disable-setuid-sandbox",
         "--disable-dev-shm-usage",
         "--disable-gpu",
+        "--no-zygote",
+        "--single-process", // مهمة جداً لتقليل استهلاك السيرفر المشترك للمصادر
       ],
     };
 
@@ -89,6 +91,8 @@ class SessionManager {
     } else if (process.platform === "linux") {
       // 2. Auto-detect common Chromium/Chrome paths on Linux systems
       const commonLinuxPaths = [
+        // إضافة المسار الجديد المخصص للاستضافة أولاً لضمان تشغيله فوراً
+        "/home/u902755331/domains/whatsbot.ahmedgamal.org/.cache/puppeteer/chrome/linux-151.0.7879.0/chrome-linux64/chrome",
         "/usr/bin/chromium-browser",
         "/usr/bin/chromium",
         "/usr/bin/google-chrome-stable",
